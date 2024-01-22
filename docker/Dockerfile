@@ -27,7 +27,7 @@ RUN pip install jupyterlab
 RUN pip install ipywidgets
 
 #install opendan-text-generation-webui
-RUN git clone https://github.com/Synthintel0/MyGirlGPT.git &&\
+RUN git clone https://github.com/simonlaw0711/MyGirlGPT.git &&\
     cd /MyGirlGPT/opendan-text-generation-webui &&\
     pip install -r requirements.txt &&\
     pip install -r extensions/openai/requirements.txt 
