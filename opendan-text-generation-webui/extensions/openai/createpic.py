@@ -34,18 +34,18 @@ params = {
     'address': sd_address,
     'mode': 1,  # modes of operation: 0 (Manual only), 1 (Immersive/Interactive - looks for words to trigger), 2 (Picturebook Adventure - Always on)
     'SD_model': 'bra_v5',  # not used right now
-    'prompt_prefix': '(8k, best quality, masterpiece:1.2), (realistic, photo-realistic:1.37), ultra-detailed, ultra high res, 1 girl',
-    'negative_prompt': 'paintings,sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, (monochrome), (grayscale),(bad-hands-5:0.8),(negative_hand-neg:0.8),easynegative, ng_deepnegative_v1_75t,((belly wrinkles,abs,navel piercing,nail polish,mole)),(bad-artist, bad-image-v2-39000)',
-    'width': 640,
-    'height': 640,
+    'prompt_prefix': 'realistic,young Japanese idol 1girl portrait,upper body,black hair,indoors,looking at viewer,simple background,happy smile,jewelry including a necklace and earrings,popular Korean makeup,photorealistic, sexy, pure innocence, romantic setting, blush, ',
+    'negative_prompt': '(worst quality,low resolution,bad hands,open mouth),distorted,twisted,watermark,',
+    'width': 720,
+    'height': 1024,
     'restore_faces': False,
     'enable_hr': True,
     'hr_upscaler': 'R-ESRGAN 4x+ Anime6B',
     'hr_scale': '2',
     'denoising_strength': 0.5,
     'seed': -1,
-    'sampler_name': 'DPM++ SDE Karras',
-    'steps': 20,
+    'sampler_name': 'Restart',
+    'steps': 21,
     'cfg_scale': 7,
     'translations': True
 }

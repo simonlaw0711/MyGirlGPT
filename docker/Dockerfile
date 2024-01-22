@@ -5,9 +5,9 @@ FROM ${BASE_IMAGE} as dev-base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND noninteractive\
+ENV DEBIAN_FRONTEND noninteractive
 
-SHELL=/bin/bash
+ENV SHELL /bin/bash
 
 RUN apt-key del 7fa2af80
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
@@ -44,8 +44,8 @@ RUN apt install -y npm && \
     npm install
 
 WORKDIR /MyGirlGPT
-
-RUN cd opendan-text-generation-webui && python download-model.py TehVenom/Pygmalion-Vicuna-1.1-7b
+ARG LOAD_MODEL
+RUN cd opendan-text-generation-webui && python download-model.py ${LOAD_MODEL}
 ADD install_bark.py .
 RUN python install_bark.py
 RUN python -m nltk.downloader punkt
