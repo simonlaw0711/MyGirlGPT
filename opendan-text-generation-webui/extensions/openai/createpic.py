@@ -34,8 +34,8 @@ params = {
     'address': sd_address,
     'mode': 1,  # modes of operation: 0 (Manual only), 1 (Immersive/Interactive - looks for words to trigger), 2 (Picturebook Adventure - Always on)
     'SD_model': 'bra_v5',  # not used right now
-    'prompt_prefix': 'realistic,young Japanese idol 1girl portrait,upper body,black hair,indoors,looking at viewer,simple background,happy smile,jewelry including a necklace and earrings,popular Korean makeup,photorealistic, sexy, pure innocence, romantic setting, blush, ',
-    'negative_prompt': '(worst quality,low resolution,bad hands,open mouth),distorted,twisted,watermark,',
+    'prompt_prefix': '(masterpiece, high quality, fisheye:1.2),8K,realistic,young Japanese idol 1girl portrait,detailed natural skin texture,detailed face,detailed eyes,detailed lighting,looking at viewer,simple background,parted lips,popular Korean makeup,photorealistic,(intricate details:0.5), nsfw',
+    'negative_prompt': '(worst quality,low resolution,bad hands,open mouth),distorted,twisted,watermark, text, disorted object,',
     'width': 720,
     'height': 1024,
     'restore_faces': False,
@@ -44,7 +44,7 @@ params = {
     'hr_scale': '2',
     'denoising_strength': 0.5,
     'seed': -1,
-    'sampler_name': 'Restart',
+    'sampler_name': 'DPM++ SDE Karras',
     'steps': 21,
     'cfg_scale': 7,
     'translations': True
