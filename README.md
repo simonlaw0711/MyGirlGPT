@@ -12,18 +12,6 @@ Click the image below to watch a demo:
 
 [![Demo Video](http://img.youtube.com/vi/GlDwTl__UDs/0.jpg)](https://www.youtube.com/watch?v=GlDwTl__UDs "Demo Video")
 
-## Subscribe to updates here: https://twitter.com/SynthIntel2023
-
-## Public Telegram Bot
-Join us on Telegram to chat with Cherry and be part of the MyGirlGPT community! Click [MyGirlGPTCommunity](https://t.me/MyGirlGPTCommunity) to join.
-
-### How to use telegram bot
-- In the group, use `@mygirlgpt_bot` to talk to Cherry. 
-- Want to hear Cherry's voice? Just use the /voice command to switch it on or off.
-- want a selfie? Just send  "send me a pic" or "send me your selfie", and it'll be on its way!
-
-![chat example](imgs/chat.png)
-
 
 ## Architecture
 
@@ -54,6 +42,14 @@ Join us on Telegram to chat with Cherry and be part of the MyGirlGPT community! 
    Follow the instructions outlined in the [How to run TelegramBot](TelegramBot/README.md) to start the bot.  
 Now you can have fun chatting with your AI girl!!!
 
+
+## [How to Run MyGirlGPT in RunPod](docker/README.md)
+
+https://github.com/Synthintel0/MyGirlGPT/assets/135929884/0484065f-e956-4ace-a8cd-315fadd67156
+
+### What's RunPod
+> [RunPod](https://www.runpod.io) is a cloud computing platform, primarily designed for AI and machine learning applications. 
+
 ## Features
 * Telegram Integration: Connect directly with your AI girlfriend through Telegram, allowing you to send and receive messages seamlessly.
 * Local Large Language Model (LLM): Powered by [text-generation-webui](https://github.com/oobabooga/text-generation-webui) with better privacy protection.
@@ -69,26 +65,18 @@ The model is [TehVenom/Pygmalion-Vicuna-1.1-7b](https://huggingface.co/TehVenom/
 * LLM for SD prompts: Replacing GPT-3.5 with a local LLM to generate prompts for SD.
 * Switch Personality: Allow users to switch between different personalities for AI girlfriend, providing more variety and customization options for the user experience.
 
-## FAQ
-1. **Q:** How much vram would you recommend to run this locally?
 
-   **A:** The system requires approximately 36GB VRAM, with 15-17GB for the LLM Server, 7GB for the TTS Server, and 11GB for the stable diffusion webui.
-2. **Q:** Why cherry refuses but still send pictures?
+## [FAQ](docs/FAQ.md)
 
-   **A:** Sending pictures depends on your message, and for now we won't consider Cherry's opinion. So what you see is her rejecting your request, but you will still receive the photos. Next version, send picture will base on cherry's opition. Once Cherry says no, you will not get the picture. This will make her like human more.
-3. **Q:** How do we set it up on a server and make it run 24/7 ? 
-
-   **A:** I will write a deployment guide for the project. 
-
-4. **Q:** Can I run multiple parts of the system across multiple devices? (LLM server in one device, TTS in another and stable diffusion in a web server) is that possible? 
-
-   **A:** Yes you can run multiple parts of the system across multiple devices. Right now I have a A5000 for LLM & TTS,  a 3090 for stable diffusion 
-
-5. **Q:** Can I connect my existing stable diffusion with this? Or require a dedicated instance?
-
-   **A:** Yes, you can use the exsiting stable diffusion, just make sure to add `--api` to the args.
 ## Contributing
 We welcome pull requests. If you plan to make significant changes, please open an issue first to discuss them.
+
+
+
+
+## **⭐Star History**
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Synthintel0/MyGirlGPT&type=Date)](https://api.star-history.com/svg?repos=Synthintel0/MyGirlGPT&type=Date)
 
 ## License
 This project is licensed under the MIT License.
