@@ -5,6 +5,7 @@ import QuickLRU from 'quick-lru'
 import KeyvRedis from '@keyv/redis'
 
 import { ExchangeMessageData, GPTResponseData } from '../types/index.js'
+import { UserManager } from './user-management.mjs'
 import { chatGPTAPI } from './chatgpt-api.mjs'
 import { WebsocketClient } from './websocket-client.mjs'
 import { textToVoice } from './text-to-voice.mjs'
@@ -12,6 +13,7 @@ import PromiseQueue from '../utils/promise-queue.mjs'
 import { splitParagraphToShorterParts } from '../utils/text.mjs'
 
 dotenv.config()
+UserManager.initialize();
 
 class App {
   constructor() {
@@ -41,7 +43,41 @@ class App {
   private parentMessageIds: Keyv<string> | undefined
 
   private handleMessageRequest = async (data: ExchangeMessageData) => {
-    console.log('handleMessageRequest', data)
+    console.log('handleMessageRequest', data);
+    const chatId = data.chat.id.toString(); // 将 chat.id 转换为字符串
+    let userInfo = await UserManager.getUserInfo(chatId);
+  
+    if (!userInfo) {
+      console.log(`User ${chatId} not found. Registering user...`);
+      // 使用 chat.id 作为用户名来注册新用户，并设置初始信用值
+      userInfo = {
+        name: chatId, 
+        isVip: false, 
+        credit: 100, // 假设初始信用值为100
+      };
+      await UserManager.registerUser(chatId, userInfo);
+      console.log(`User ${chatId} has been registered.`);
+    } else {
+      console.log(`User ${chatId} found:`, userInfo);
+      // 如果信用系统启用，则根据消息类型调整用户信用值
+      if (UserManager.creditSystemEnabled) {
+        let creditChange = 0;
+        if (data.message.type === 'image') {
+          creditChange -= 60;
+        } else if (data.message.type === 'text') {
+          // 假设每条完整回答消耗4信用
+          creditChange -= 4;
+        } else if (data.message.type === 'voice' && data.message.duration) {
+          const duration = data.message.duration; // 現在可以安全訪問
+          creditChange -= duration * 3;
+        }
+        if (creditChange !== 0) {
+          userInfo.credit += creditChange; // 更新信用值
+          await UserManager.updateUserCredit(chatId, userInfo.credit);
+          console.log(`Updated user ${chatId} credit to: ${userInfo.credit}`);
+        }
+      }
+    }
     if (data.message.type === 'command') {
       if (data.message.content === 'reset') {
         const parentMessageId = await this.parentMessageIds?.get(data.chat.id)

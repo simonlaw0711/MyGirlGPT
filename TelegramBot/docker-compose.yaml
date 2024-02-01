@@ -7,13 +7,13 @@ services:
       dockerfile: Dockerfile
     container_name: bot
     environment:
-      BOT_TOKEN: ${BOT_TOKEN} # telegram token
-      WEBSOCKET_PORT: 8081
+      BOT_TOKEN: '6544027664:AAGo9DEgO85IaX-AB_epxcBBnFCrb_4LCSE' # telegram token
+      WEBSOCKET_PORT: 8555
       START_COMMAND_REPLY_TEXT: './src/assets/hello.txt'
       START_COMMAND_REPLY_VOICE: './src/assets/hello.oga'
       START_COMMAND_REPLY_PHOTO: './src/assets/hello.jpg'
     ports:
-      - 8081:8081
+      - 8555:8555
     restart: unless-stopped
   mygirl:
     build:
@@ -21,10 +21,8 @@ services:
       dockerfile: Dockerfile_mygirl
     container_name: mygirl
     environment:
-      WEBSOCKET_SERVER: http://bot:8081
-      GPT_SERVER: "OPENAI API ADDRESS OF TEXT-GENERATION-WEBUI"
-      TTS_SERVER: "ADDRESS FOR TTS"
-      REDIS_SERVER: "ADDRESS OF REDIS" # alternative
-    ports:
-      - 8081:8081
+      WEBSOCKET_SERVER: http://bot:8555
+      GPT_SERVER: "127.0.0.1"
+      TTS_SERVER: "127.0.0.1"
+      REDIS_SERVER: "127.0.0.1" # alternative
     restart: unless-stopped

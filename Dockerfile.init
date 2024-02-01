@@ -1,0 +1,66 @@
+# start from runpod pytorch container
+ARG BASE_IMAGE=simon0711/mygirlgpt:init
+
+FROM ${BASE_IMAGE} as dev-base
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV DEBIAN_FRONTEND noninteractive\
+
+SHELL=/bin/bash
+
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
+RUN apt-get update --yes && \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    apt-get upgrade --yes && \
+    apt install --yes --no-install-recommends\
+    wget\
+    bash\
+    espeak-ng\
+    ffmpeg\
+    openssh-server &&\
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+RUN /usr/bin/python3 -m pip install --upgrade pip
+RUN pip install jupyterlab
+RUN pip install ipywidgets
+
+
+#install opendan-text-generation-webui
+COPY opendan-text-generation-webui /MyGirlGPT/opendan-text-generation-webui
+RUN cd /MyGirlGPT/opendan-text-generation-webui &&\
+    pip install -r requirements.txt &&\
+    pip install -r extensions/openai/requirements.txt 
+#install opendan-tts-server
+COPY opendan-tts-server /MyGirlGPT/opendan-tts-server
+RUN cd /MyGirlGPT/opendan-tts-server &&\
+    pip install -r requirements.txt 
+
+#install TelegramBot
+COPY TelegramBot /MyGirlGPT/TelegramBot
+RUN apt install -y npm && \
+    npm install n -g &&\
+    n stable &&\
+    hash -r &&\
+    cd /MyGirlGPT/TelegramBot &&\
+    npm install
+
+WORKDIR /MyGirlGPT
+
+ADD docker/install_bark.py .
+RUN python install_bark.py
+RUN python -m nltk.downloader punkt
+RUN apt install -y redis
+
+ADD docker/start_opendan_textgen_server.sh /MyGirlGPT/start_opendan_textgen_server.sh
+ADD docker/start_opendan_tts_server.sh /MyGirlGPT/start_opendan_tts_server.sh
+ADD docker/start_telegram_bot.sh /MyGirlGPT/start_telegram_bot.sh
+
+RUN chmod +x /MyGirlGPT/start_opendan_textgen_server.sh
+RUN chmod +x /MyGirlGPT/start_opendan_tts_server.sh
+RUN chmod +x /MyGirlGPT/start_telegram_bot.sh
+ADD docker/start.sh /
+RUN chmod +x /start.sh
+
+CMD [ "/start.sh" ]

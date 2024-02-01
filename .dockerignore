@@ -1,0 +1,6 @@
+docs/
+example/
+imgs/
+opendan-text-generation-webui/models
+README.md
+Dockerfile

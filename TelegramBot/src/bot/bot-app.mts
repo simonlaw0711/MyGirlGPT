@@ -10,6 +10,8 @@ import fs from 'fs'
 import { ExchangeMessageData } from '../types'
 import { beautifyMarkdown } from '../utils/markdown.mjs'
 import { sleep } from '../utils/sleep.mjs'
+// Todo: implement isAdminUser
+import { isAdminUser } from '../utils/admin.mjs';
 
 type CustomContext = FileFlavor<Context>
 
@@ -74,6 +76,24 @@ class BotApp {
       process.env.START_COMMAND_REPLY_VOICE === undefined
     ) {
       await ctx.reply('Hello!').catch(() => {})
+    }
+  }
+
+  // Create a admin command to generate a dynamic context menu for user management
+  private handleCommandAdminMenu = async (ctx: CustomContext) => {
+    console.log('handleCommandAdminMenu')
+    const userId = ctx.from?.id
+    if (userId && isAdminUser(userId)) {
+      ctx.reply('Admin menu:', {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'View user info', callback_data: 'view_users' }],
+            [{ text: 'Other admin actions', callback_data: 'other_admin_action' }],
+          ],
+        },
+      })
+    } else {
+      ctx.reply('Sorry, you are not an admin.')
     }
   }
 

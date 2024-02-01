@@ -1,0 +1,4 @@
+  File "server.py", line 56
+    return sorted([re.sub('-np$', '', item.name) for item in list(Path(f'{shared.args.model_dir}/').glob('*')) if item.name.endswith('-np')], key=str.lower)
+                                                                                                 ^
+SyntaxError: invalid syntax
