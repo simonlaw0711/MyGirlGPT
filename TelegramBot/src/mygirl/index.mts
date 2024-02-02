@@ -5,7 +5,7 @@ import QuickLRU from 'quick-lru'
 import KeyvRedis from '@keyv/redis'
 
 import { ExchangeMessageData, GPTResponseData } from '../types/index.js'
-import { UserManager } from './user-management.mjs'
+import { UserManager } from '../bot/user-management.mjs'
 import { chatGPTAPI } from './chatgpt-api.mjs'
 import { WebsocketClient } from './websocket-client.mjs'
 import { textToVoice } from './text-to-voice.mjs'

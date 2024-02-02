@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import KeyvRedis from '@keyv/redis';
 import QuickLRU from 'quick-lru';
 import Keyv from 'keyv';
+import Redis from 'ioredis';
 
 dotenv.config();
 
@@ -10,10 +11,12 @@ const REDIS_URL = process.env.REDIS_SERVER as string;
 
 export class UserManager {
   static usersStore: Keyv;
+  static redisClient: Redis;
   static creditSystemEnabled = process.env.CREDIT_SYSTEM_ENABLED === 'true';
   static initialize() {
     let kvStore: KeyvRedis | QuickLRU<string, any>;
     if (REDIS_URL !== undefined && _.startsWith(REDIS_URL, 'redis://')) {
+      this.redisClient = new Redis(REDIS_URL);
       kvStore = new KeyvRedis(REDIS_URL);
     } else {
       kvStore = new QuickLRU<string, any>({ maxSize: 10000 });
@@ -38,6 +41,24 @@ export class UserManager {
     }
     console.log(`User ${userId} info:`, userInfo);
     return userInfo;
+  }
+
+  static async getAllUserInfo(userId: string) {
+    const users = [];
+    const namespacePrefix = 'MyGirlGPT-usersStore:';
+    let cursor = '0';
+
+    do {
+      const result = await UserManager.redisClient.scan(cursor, 'MATCH', `${namespacePrefix}*`);
+      cursor = result[0];
+      const keys = result[1];
+      for (const key of keys) {
+        const user = await UserManager.usersStore.get(key.replace(namespacePrefix, ''));
+        users.push(user);
+      }
+    } while (cursor !== '0');
+
+    return users;
   }
 
   static async updateUserCredit(userId: string, credit: number) {

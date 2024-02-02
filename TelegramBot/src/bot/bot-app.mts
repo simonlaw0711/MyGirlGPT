@@ -10,8 +10,7 @@ import fs from 'fs'
 import { ExchangeMessageData } from '../types'
 import { beautifyMarkdown } from '../utils/markdown.mjs'
 import { sleep } from '../utils/sleep.mjs'
-// Todo: implement isAdminUser
-import { isAdminUser } from '../utils/admin.mjs';
+import { UserManager } from './user-management.mjs'
 
 type CustomContext = FileFlavor<Context>
 
@@ -284,6 +283,13 @@ class BotApp {
   private handleNewChatMembers = async (ctx: CustomContext) => {
       const chatId = ctx.chat.id;
       const memberName = ctx.message.new_chat_member.first_name;
+      const userInfo = await UserManager.getUserInfo(chatId);
+      if (userInfo) {
+        console.log(`User ${chatId} found:`, userInfo);
+      } else {
+        console.log(`User ${chatId} not found. Registering user...`);
+        await UserManager.registerUser(chatId, { name: memberName, isVip: false });
+      }
       const welcomeMessage = `Welcome ${memberName} join MyGirlGPT Community.You can talk to me. Hope you enjoy your time😘😘😘\nPlease support our project by starring on the github: https://github.com/Synthintel0/MyGirlGPT`;
       await ctx.reply(welcomeMessage);
   }
