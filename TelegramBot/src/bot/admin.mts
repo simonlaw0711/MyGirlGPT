@@ -9,33 +9,20 @@ export class AdminMenu {
   static onMessageCallback: ((data: ExchangeMessageData) => void) | undefined;
   private static adminUserIds: string[] = process.env.ADMIN_USER_IDS?.split(',') || [];
   
-  private static isAdminUser(userId: number): boolean {
+  static isAdminUser(userId: number): boolean {
     return AdminMenu.adminUserIds.includes(userId.toString());
   }
-
-  private static handleCommandAdminMenu(ctx: CustomContext) {
-    if (!AdminMenu.isAdminUser(ctx.from?.id)) {
-      ctx.reply('You are not an admin!');
-      return;
+ 
+  // impletment handleViewUsersInfo, the bot should send a message to admin to ask for the user id then return the user info
+  static async handleViewUsersInfo(ctx: CustomContext) {
+    if (!AdminMenu.isAdminUser(ctx.from?.id || 0)) {
+      return ctx.reply('You are not an admin');
     }
-    const keyboard = [
-      ['Check all user info'],
-    ];
-    ctx.reply('Admin menu', {
-      reply_markup: {
-        keyboard,
-        resize_keyboard: true,
-      },
-    });
+    const userManager = new UserManager();
+    const users = await userManager.getAllUsers();
+    if (users.length === 0) {
+      return ctx.reply('No user found');
+    }
+    const userNames = users.map(user => user.username || user.first_name);
+    return ctx.reply(`Users: ${userNames.join(', ')}`);
   }
-  private static handleCheckAllUserInfo(ctx: CustomContext) {
-    console.log('handleCommandReset');
-    UserManager.getAllUserInfo(ctx.from?.id).then((users) => {
-      console.log(users);
-    });
-    ctx
-      .editMessageText('')
-    ctx.reply('Done!');
-  }
-  
-}

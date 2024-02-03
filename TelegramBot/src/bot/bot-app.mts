@@ -1,4 +1,4 @@
-import { Bot, Context, InputFile } from 'grammy'
+import { Bot, Context, InputFile, SessionFlavor } from 'grammy'
 import { FileFlavor, hydrateFiles } from '@grammyjs/files'
 import { Message } from 'grammy/types'
 import { nanoid } from 'nanoid'
@@ -11,6 +11,7 @@ import { ExchangeMessageData } from '../types'
 import { beautifyMarkdown } from '../utils/markdown.mjs'
 import { sleep } from '../utils/sleep.mjs'
 import { UserManager } from './user-management.mjs'
+import { AdminMenu } from './admin.mjs'
 
 type CustomContext = FileFlavor<Context>
 
@@ -23,6 +24,7 @@ class BotApp {
     bot.command('start', this.handleCommandStart)
     bot.command('voice', this.handleCommandVoice)
     bot.command('reset', this.handleCommandReset)
+    bot.command('admin', this.handleCommandAdminMenu)
 
     bot.on('message::mention', this.handleMessageMention)
     bot.on('message:text', this.handleMessageText)
@@ -31,6 +33,7 @@ class BotApp {
 
     bot.callbackQuery('turn-on-voice', this.handleCallbackQueryTurnOnVoice)
     bot.callbackQuery('turn-off-voice', this.handleCallbackQueryTurnOffVoice)
+    bot.callbackQuery('view_users', this.handleCallbackQueryViewUsers)
 
     bot.catch((err) => {
       console.error("bot catch error:", err);
@@ -78,11 +81,10 @@ class BotApp {
     }
   }
 
-  // Create a admin command to generate a dynamic context menu for user management
   private handleCommandAdminMenu = async (ctx: CustomContext) => {
     console.log('handleCommandAdminMenu')
     const userId = ctx.from?.id
-    if (userId && isAdminUser(userId)) {
+    if (userId && AdminMenu.isAdminUser(userId)) {
       ctx.reply('Admin menu:', {
         reply_markup: {
           inline_keyboard: [
@@ -91,6 +93,18 @@ class BotApp {
           ],
         },
       })
+    } else {
+      ctx.reply('Sorry, you are not an admin.')
+    }
+  }
+
+  private handleCallbackQueryViewUsers = async (ctx: CustomContext) => {
+    console.log('handleCallbackQueryViewUsers')
+    const userId = ctx.from?.id
+      if (AdminMenu.isAdminUser(userId as number)) {
+        // Ask for the user id
+        ctx.reply('Please enter the user id')
+        ctx.session.awaitingUserId = true;
     } else {
       ctx.reply('Sorry, you are not an admin.')
     }
